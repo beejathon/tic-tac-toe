@@ -1,14 +1,68 @@
 const gameBoard = (() => {
-    
-    const board = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3']
 
-    const getCell = (cell) => {
-        return board.splice(board.indexOf(cell), 1)
+    const _board = ['', '', '', '', '', '', '', '', '']
+    const _winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [6, 4, 2]
+    ]
+
+    const markCell = (cell, playing) => {
+        _board.splice(cell.id, 1, playing)
     }
 
-    const activeGameCheck = () => (board.length == 0) ? false : true;
+    const checkWin = (playing) => {
+        return _winConditions.some((array) => {
+            return array.every((index) => {
+                return (_board[index] == playing)
+            })
+        })
+    }
 
-    return {getCell, activeGameCheck}
+    const checkActive = () => (_board.includes('')) ? true : false;
+
+    const reset = () => _board.map((cell) => cell = '')
+
+    return {markCell, checkActive, checkWin, reset}
+
+})();
+
+const gameController = (() => {
+
+    let _playing = 'X'
+
+    function playTurn(e) {
+
+        // Mark cell on gameboard/display
+        const cell = e.target
+        displayController.markCell(cell, _playing)
+        gameBoard.markCell(cell, _playing)
+
+        // Check for win/tie
+        let winCheck = gameBoard.checkWin(_playing)
+        let gameActive = gameBoard.checkActive()
+        if (winCheck) alert(`${_playing} WINS`)
+        if (!winCheck && !gameActive) alert('TIE GAME!')
+
+        // Switch player
+        nextTurn()
+    }
+
+    function nextTurn() {
+        _playing = (_playing === 'X') ? 'O' : 'X'
+    }
+
+    function newGame() {
+        gameBoard.reset()
+        displayController.render()
+    }
+
+    return {nextTurn, playTurn, newGame}
 
 })();
 
@@ -16,7 +70,7 @@ const displayController = (() => {
 
     function render() {
         const cells = document.querySelectorAll('.cell')
-        cells.forEach(cell => cell.addEventListener('click', gameController.move, { once : true }))
+        cells.forEach(cell => cell.addEventListener('click', gameController.playTurn, { once : true }))
         cells.forEach(cell => cell.textContent = '')
     }
 
@@ -28,30 +82,9 @@ const displayController = (() => {
 
 })();
 
-const gameController = (() => {
-    
-    let _playing = 'X'
-
-    const xCells = []
-    const oCells = []
-
-    function move(e) {
-        const cell = e.target
-        if (_playing == 'X') xCells.push(gameBoard.getCell(e.target.id))
-        if (_playing == 'O') oCells.push(gameBoard.getCell(e.target.id))
-        displayController.markCell(cell, _playing)
-        nextTurn()
-    }
-
-    function nextTurn() {
-        _playing = (_playing == 'X') ? 'O' : 'X'
-    }
-
-    return {nextTurn, move, xCells}
-
-})();
-
-
 const Player = (name) => {
     this.name = name
 };
+
+const playBtn = document.querySelector('.newgame');
+playBtn.addEventListener('click', gameController.newGame);

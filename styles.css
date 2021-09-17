@@ -10,12 +10,14 @@
     align-content: center;
     justify-items: center;
     align-items: center;
+    grid-gap: 0px;
+    padding: 10px;
 }
 
 .cell {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     border: solid 1px black;
-    font-size: xx-large;
+    font-size: 130px;
     text-align: center;
 }
