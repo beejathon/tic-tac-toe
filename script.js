@@ -1,14 +1,12 @@
 const gameBoard = (() => {
     
-    // array for storing open board locations
-    const _board = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3']
+    const board = ['a1', 'a2', 'a3', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3']
 
-    // method for returning board cell to player
     const getCell = (cell) => {
-        return _board.splice(_board.indexOf(cell), 1)
+        return board.splice(board.indexOf(cell), 1)
     }
 
-    const activeGameCheck = (_board.length != 0) ? true : false;
+    const activeGameCheck = () => (board.length == 0) ? false : true;
 
     return {getCell, activeGameCheck}
 
@@ -16,44 +14,44 @@ const gameBoard = (() => {
 
 const displayController = (() => {
 
-    // modify DOM
-    function populate() {
+    function render() {
         const cells = document.querySelectorAll('.cell')
-        cells.forEach(cell => cell.addEventListener('click', markCell))
+        cells.forEach(cell => cell.addEventListener('click', gameController.move, { once : true }))
         cells.forEach(cell => cell.textContent = '')
     }
 
-    function markCell(e) {
-        e.target.textContent = gameController.playing
+    function markCell(cell, playing) {
+        cell.textContent = playing
     }
 
-    return {populate, markCell}
+    return {render, markCell}
 
 })();
 
 const gameController = (() => {
     
-    const playing = 'X'
+    let _playing = 'X'
 
-    // method for player moves
-    const playerMove = (cell) => {
-        gameBoard.getCell(cell);
+    const xCells = []
+    const oCells = []
+
+    function move(e) {
+        const cell = e.target
+        if (_playing == 'X') xCells.push(gameBoard.getCell(e.target.id))
+        if (_playing == 'O') oCells.push(gameBoard.getCell(e.target.id))
+        displayController.markCell(cell, _playing)
+        nextTurn()
     }
 
-    return {playing}
+    function nextTurn() {
+        _playing = (_playing == 'X') ? 'O' : 'X'
+    }
+
+    return {nextTurn, move, xCells}
 
 })();
 
 
 const Player = (name) => {
-
     this.name = name
-    const _cells = []
-    
-    const playerAction = (cell) => {
-         
-        gameBoard.playerMove()
-    }
-
-    return {playerName, playerAction}
 };
