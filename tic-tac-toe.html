@@ -8,6 +8,7 @@
 
 <body>
 <div class="container">
+    <h1>WELCOME TO AMERICA'S LONGEST RUNNING GAME SHOW...</h3>
     <div class="board" id="board">
         <div class="cell" id="0"></div>
         <div class="cell" id="1"></div>
@@ -19,8 +20,21 @@
         <div class="cell" id="7"></div>
         <div class="cell" id="8"></div>
     </div>
-    <div class="gamecontrols"></div>
-    <button class='newgame'>New Game</button>
+    <div class="gamecontrols">
+        <button class="newgame" id="newgame">New Game</button>
+        <div class="players">
+            <p class="playername" id="playerX">Player X</p>
+            <form class="nameform" id="xForm">
+                <input type="text" id="xInput" name="name" placeholder="Enter a name" autocomplete="off" autofocus>
+            </form>
+        </div>
+            <div class="players">
+            <p class="playername" id="playerO">Player O</p>
+            <form class="nameform" id="oForm">
+                <input type="text" id="oInput" name="name" placeholder="Enter a name" autocomplete="off">
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 

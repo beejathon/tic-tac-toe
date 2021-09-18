@@ -26,7 +26,7 @@ const gameBoard = (() => {
 
     const checkActive = () => (_board.includes('')) ? true : false;
 
-    const reset = () => _board.map((cell) => cell = '')
+    const reset = () => _board.fill('')
 
     return {markCell, checkActive, checkWin, reset}
 
@@ -46,8 +46,8 @@ const gameController = (() => {
         // Check for win/tie
         let winCheck = gameBoard.checkWin(_playing)
         let gameActive = gameBoard.checkActive()
-        if (winCheck) alert(`${_playing} WINS`)
-        if (!winCheck && !gameActive) alert('TIE GAME!')
+        if (winCheck) displayController.winMessage(_playing)
+        if (!winCheck && !gameActive) displayController.tieMessage()
 
         // Switch player
         nextTurn()
@@ -72,19 +72,52 @@ const displayController = (() => {
         const cells = document.querySelectorAll('.cell')
         cells.forEach(cell => cell.addEventListener('click', gameController.playTurn, { once : true }))
         cells.forEach(cell => cell.textContent = '')
+        const xForm = document.getElementById('xForm')
+        const oForm = document.getElementById('oForm')
+        xForm.addEventListener('submit', displayController.addPlayer)
+        oForm.addEventListener('submit', displayController.addPlayer)
     }
 
     function markCell(cell, playing) {
         cell.textContent = playing
     }
 
-    return {render, markCell}
+    function addPlayer(e) {
+        e.preventDefault()
+        if (e.target.id == 'xForm') {
+            const xInput = document.getElementById('xInput')
+            const playername = document.getElementById('playerX')
+            playername.textContent = xInput.value
+            document.getElementById('xForm').reset()
+        }
+        if (e.target.id == 'oForm') {
+            const oInput = document.getElementById('oInput')
+            const playername = document.getElementById('playerO')
+            playername.textContent = oInput.value
+            document.getElementById('oForm').reset()
+        }
+    }
+
+    function winMessage(playing) {
+        if (playing == 'X') {
+            const player = document.getElementById('playerX')
+            alert(player.textContent + ' WINS')
+        }
+        if (playing == 'O') {
+            const player = document.getElementById('playerO')
+            alert(player.textContent + ' WINS')
+        }
+    }
+
+    function tieMessage() {
+        alert(`IT'S A TIE GAME`)
+    }
+
+    return {render, markCell, addPlayer, winMessage, tieMessage}
 
 })();
 
-const Player = (name) => {
-    this.name = name
-};
-
-const playBtn = document.querySelector('.newgame');
+const playBtn = document.getElementById('newgame');
 playBtn.addEventListener('click', gameController.newGame);
+
+gameController.newGame();
