@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: space-evenly;
 }
 
 .main {
@@ -14,6 +15,7 @@
 
 .board {
     display: grid;
+    border-style: none;
     grid-template-columns: repeat(3, auto);
     justify-content: center;
     align-content: center;
@@ -29,14 +31,35 @@
 .cell {
     width: 150px;
     height: 150px;
-    border: solid 1px black;
+    border: solid 3px black;
     font-size: 130px;
     text-align: center;
     cursor: pointer;
 }
 
+.cell:nth-child(-n + 3) {
+    border-top: none;
+}
+
+.cell:nth-child(3n) {
+    border-right: none;
+}
+
+.cell:nth-child(3n - 2) {
+    border-left: none;
+}
+
+.cell:nth-child(n + 7) {
+    border-bottom: none;
+}
+
+.norm {
+    flex: 0 1 auto;
+    margin-left: auto;
+    height: 500px;
+}
+
 .gamecontrols {
-    margin-top: auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
@@ -73,10 +96,4 @@
 .newgame:hover {
     background:linear-gradient(to bottom, #634b30 5%, #7d5d3b 100%);
 	background-color:#634b30;
-}
-
-.norm {
-    flex: 0 1 auto;
-    margin-left: auto;
-    max-width: 25%;
 }
